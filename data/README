@@ -3,3 +3,6 @@ mock codes, not data files which are outputs.
 Examples could include information on the DESI footprint or the
 redshift distributions, k-corrections, efficiencies, etc.
 Many of these files will be the output of scripts.
+
+#Description of files
+Ndzdg_QSO.dat.txt   This contains expected QSO density in DESI as the function of redshift and observed g band magnitude
