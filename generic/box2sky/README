@@ -1,6 +1,7 @@
-Takes a (periodic) box of QSOs and projects them
-onto the sky.
+Takes a (periodic) box of objects and projects them
+onto the sky, replicating the box as necessary.
 Applies the DESI survey mask.
-Computes apparent magnitudes from the supplied absolute
-magnitudes.
-Applies an approximation to the DESI QSO selection.
+Result is RA, DEC, Z and Ztrue for each object which
+lies in the survey footprint.
+Can optionally use BoxRemap to change the geometry of
+the box before projecting.
