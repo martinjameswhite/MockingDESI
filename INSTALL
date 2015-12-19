@@ -1,0 +1,17 @@
+Instructions on how to install the packages, and a list
+of dependencies.
+
+Our goal is to minimize the dependencies of this package
+on other libraries or routines, in order the increase
+interoperability, reduce barriers to entry and make it
+easier to deploy in a HPC environment.  However several
+packages are used throughout:
+
+Python (2.7.9 or later)
+Numpy  (1.9.2 or later)
+Matplotlib (1.4.3 or later)
+Modern C++ compiler, such as g++ v4.3.4 or later
+
+You should set up an environment variable pointing to this
+directory, e.g.
+export MOCKINGDESI_BASE=`pwd`

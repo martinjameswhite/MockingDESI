@@ -1,0 +1,7 @@
+This could be a place for useful codes, such as correlation
+function or power spectrum estimators, to go.
+
+Tools to analyze the mocks once they have been made to look
+like the data should be part of an analysis product, but tools
+for getting at "truth" from the periodic boxes or things like
+that could live under here.

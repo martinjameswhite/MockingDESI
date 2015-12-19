@@ -1,0 +1,5 @@
+This directory holds data files which are used as inputs to the
+mock codes, not data files which are outputs.
+Examples could include information on the DESI footprint or the
+redshift distributions, k-corrections, efficiencies, etc.
+Many of these files will be the output of scripts.

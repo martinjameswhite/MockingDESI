@@ -1,0 +1,6 @@
+Takes a (periodic) box of QSOs and projects them
+onto the sky.
+Applies the DESI survey mask.
+Computes apparent magnitudes from the supplied absolute
+magnitudes.
+Applies an approximation to the DESI QSO selection.
