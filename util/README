@@ -1,2 +1,10 @@
 This directory is meant to hold common utility routines
 that are shared across different codes.
+
+litemangle.py and mangle.h are from
+https://github.com/martinjameswhite/litemangle
+
+filehandler.h and ndfilehandler.py are from
+https://github.com/martinjameswhite/filehandler
+
+
