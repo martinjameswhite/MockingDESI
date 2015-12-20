@@ -10,7 +10,7 @@
 export OMP_NUM_THREADS=4
 #
 # The DESI footprint
-mask=../data/tiles.pix.ply
+mask=../../data/tiles.pix.ply
 # For the OuterRim simulation
 OmM=0.265
 hub=0.710
@@ -20,6 +20,6 @@ zmin=1.5
 zmax=2.5
 fb=qso_z2.00
 # Cori
-srun -n 1 -c 4 ../generic/box2sky/box2sky \
+srun -n 1 -c 4 ../../generic/box2sky/box2sky \
   ${OmM} ${hub} ${Box} ${zmin} ${zmax} ${mask} ${fb}
 #
