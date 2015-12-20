@@ -15,5 +15,5 @@ hub=0.710
 Box=3000.	# Mpc/h
 #
 srun -n 1 -c 4 ../generic/box2sky/box2sky \
-  ${OmM} ${hub} ${Box} ../data/tiles.ply qso_z2.00 
+  ${OmM} ${hub} ${Box} ../data/tiles.pix.ply qso_z2.00 
 #
