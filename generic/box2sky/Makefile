@@ -1,5 +1,5 @@
 CC   = g++
-OPT  = -funroll-loops -O
+OPT  = -funroll-loops -fopenmp -O
 INCL = -I$(MOCKINGDESI_BASE)/util -L$(MOCKINGDESI_BASE)/util
 
 box2sky: box2sky.cpp
