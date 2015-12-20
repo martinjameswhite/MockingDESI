@@ -1,7 +1,13 @@
+box2sky:
 Takes a (periodic) box of objects and projects them
 onto the sky, replicating the box as necessary.
 Applies the DESI survey mask.
-Result is RA, DEC, Z and Ztrue for each object which
+Result is RA, DEC, Z, Ztrue and DMOD for each object which
 lies in the survey footprint.
 Can optionally use BoxRemap to change the geometry of
-the box before projecting.
+the box before projecting (not currently implemented).
+
+stitch:
+Uses box2sky to stitch together a number of redshift
+intervals to form a pseudo-light-cone output.
+
