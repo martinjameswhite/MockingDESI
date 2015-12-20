@@ -163,6 +163,7 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
                                             const double hubble,
                                             const double offset[],
                                             const int ic,
+                                            const double zcen,
                                             const double zmin,
                                             const double zmax,
                                             const Mangle::MaskClass& M) {
@@ -170,6 +171,7 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
   // for an array of 3D positions, assuming an offset from the origin given
   // by offset[] and an observation "corner" of the box given by 0<=ic<8,
   // Returns an array of ObsObj structs.
+  // Positions are interpolated, linearly, assuming constant velocity.
   // The returned values are cut on zmin<zobs<zmax.
   // This could be made a method of a template class if helpful.
   if (pos.size()%3!=0 || pos.size()!=vel.size()) {
@@ -197,7 +199,18 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
       }
     for (int idim=0; idim<3; ++idim)
       rr += cpos[idim]*cpos[idim];
-    rr = sqrt(rr);
+    rr   = sqrt(rr);
+    O.zr = zchi(rr*boxside,-1.0);		// Real-space "redshift".
+    // Now change cpos, based on cvel, to account for the
+    // difference in redshift between zcen and now.
+    // Assume this is small enough one iteration is enough.
+    double dlna=log( (1+zcen)/(1+O.zr) );
+    rr = 1e-10;
+    for (int idim=0; idim<3; ++idim) {
+      cpos[idim] = periodic(cpos[idim]+cvel[idim]*dlna);
+      rr += cpos[idim]*cpos[idim];
+    }
+    rr   = sqrt(rr);
     O.zr = zchi(rr*boxside,-1.0);		// Real-space "redshift".
     for (int idim=0; idim<3; ++idim)
       nhat[idim] = cpos[idim]/rr;
@@ -266,9 +279,9 @@ void	write_objs(const std::vector<struct ObsObj>& Objs,
 
 int	main(int argc, char **argv)
 {
-  if (argc!=8) {
+  if (argc!=9) {
     std::cout<<"Usage: box2sky "
-             <<"<OmM> <hub> <boxside> <zmin> <zmax> <mask> <fbase>"
+             <<"<OmM> <hub> <boxside> <zcen> <zmin> <zmax> <mask> <fbase>"
              <<std::endl;
     std::cout<<"--Box side should be in Mpc/h."<<std::endl;
     std::cout<<"--Mask should be an ascii, Mangle ply file."<<std::endl;
@@ -277,8 +290,9 @@ int	main(int argc, char **argv)
   double OmM = atof(argv[1]);
   double hub = atof(argv[2]);
   double box = atof(argv[3]);
-  double zmin= atof(argv[4]);
-  double zmax= atof(argv[5]);
+  double zcen= atof(argv[4]);
+  double zmin= atof(argv[5]);
+  double zmax= atof(argv[6]);
   std::cout<<"# Mock making code running on "<<omp_get_max_threads()
            <<" threads."<<std::endl;
   std::cout<<"# Using OmM="<<OmM<<", hub="<<hub<<" and box="<<box<<"Mpc/h."
@@ -289,31 +303,31 @@ int	main(int argc, char **argv)
   // Load the cosmology and the Mangle mask.
   Cosmology         C(OmM,hub);
   Spline<double> zchi=C.z_of_chi();
-  Mangle::MaskClass M(argv[6]);
+  Mangle::MaskClass M(argv[7]);
   std::cout<<"# Read mask containing "<<M.npolygons()
-           <<" polygons from "<<argv[6]<<std::endl;
+           <<" polygons from "<<argv[7]<<std::endl;
   std::cout.flush();
 
   // Read the phase space data for the objects.
   std::vector<long> ndims;
-  std::vector<float> pos=FileHandler::read_float(argv[7],"pos",ndims);
+  std::vector<float> pos=FileHandler::read_float(argv[8],"pos",ndims);
   if (ndims.size()!=2 || ndims[1]!=3) {
-    std::cout<<"Expecting to read (Nobj,3) array from "<<argv[7]<<"[pos]"
+    std::cout<<"Expecting to read (Nobj,3) array from "<<argv[8]<<"[pos]"
              <<std::endl;
     std::cout<<"Instead got dimensions: "<<std::endl;
     for (int i=0; i<ndims.size(); ++i)
       std::cout<<"  ndims["<<i<<"]="<<ndims[i]<<std::endl;
   }
-  std::vector<float> vel=FileHandler::read_float(argv[7],"vel",ndims);
+  std::vector<float> vel=FileHandler::read_float(argv[8],"vel",ndims);
   if (ndims.size()!=2 || ndims[1]!=3) {
-    std::cout<<"Expecting to read (Nobj,3) array from "<<argv[7]<<"[vel]"
+    std::cout<<"Expecting to read (Nobj,3) array from "<<argv[8]<<"[vel]"
              <<std::endl;
     std::cout<<"Instead got dimensions: "<<std::endl;
     for (int i=0; i<ndims.size(); ++i)
       std::cout<<"  ndims["<<i<<"]="<<ndims[i]<<std::endl;
   }
   std::cout<<"# Read pos/vel information for "<<ndims[0]
-           <<" objects from "<<argv[7]<<std::endl;
+           <<" objects from "<<argv[8]<<std::endl;
   std::cout.flush();
 
   // Now we can subsample these galaxies by the above ratio and apply the mask.
@@ -332,7 +346,7 @@ int	main(int argc, char **argv)
           offset[2] = (double)iz;
           try {
             std::vector<struct ObsObj> O;
-            O = convert2obs(pos,vel,zchi,box,hub,offset,ic,zmin,zmax,M);
+            O = convert2obs(pos,vel,zchi,box,hub,offset,ic,zcen,zmin,zmax,M);
             for (int i=0; i<O.size(); ++i)
               if (O[i].wt>0) {Objs.push_back(O[i]);}
           } catch(std::exception& e) {myexception(e);}
@@ -340,7 +354,7 @@ int	main(int argc, char **argv)
       }
     }
     // Now write the results to file, labeled by octant.
-    std::ostringstream ss;  ss<<argv[7]<<"_oct"<<ic;
+    std::ostringstream ss;  ss<<argv[8]<<"_oct"<<ic;
     write_objs(Objs,ss.str().c_str());
   }
 
