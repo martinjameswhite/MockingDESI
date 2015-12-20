@@ -16,10 +16,11 @@ OmM=0.265
 hub=0.710
 Box=3000.	# Mpc/h
 # The file to process.
+zcen=2.0
 zmin=1.5
 zmax=2.5
 fb=qso_z2.00
 # Cori
 srun -n 1 -c 4 ../../generic/box2sky/box2sky \
-  ${OmM} ${hub} ${Box} ${zmin} ${zmax} ${mask} ${fb}
+  ${OmM} ${hub} ${Box} ${zcen} ${zmin} ${zmax} ${mask} ${fb}
 #
