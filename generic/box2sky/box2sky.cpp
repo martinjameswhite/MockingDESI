@@ -67,9 +67,9 @@ void	myexception(std::exception& e) {
 }
 
 
-float	periodic(const float x) {
+double	periodic(const double x) {
 // Wraps x periodically in the range [0,1).
-  float tmp = x;
+  double tmp = x;
   if (tmp >= 1.0) tmp = x-floor(x);
   if (tmp <  0.0) tmp = 1.0-(-x-floor(-x));
   return(tmp);
