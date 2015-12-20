@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH -J Box2Sky
-#SBATCH -t 0:05:00
+#SBATCH -t 0:20:00
 #SBATCH -n 4
 #SBATCH -o Box2Sky.out
 #SBATCH -e Box2Sky.err
