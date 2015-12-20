@@ -49,7 +49,7 @@ def calc_magnitude(box,octant):
     magg = magi + 0.255		# e.g. Ross++13, Eq. B7.
     # and write the results
     data = {}
-    data['GMAG'] = magg
+    data['GMAG'] = magg.astype('f4')
     FH.write_file(octant,data)
     #
 
