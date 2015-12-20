@@ -297,6 +297,7 @@ int	main(int argc, char **argv)
            <<" threads."<<std::endl;
   std::cout<<"# Using OmM="<<OmM<<", hub="<<hub<<" and box="<<box<<"Mpc/h."
            <<std::endl;
+  std::cout<<"# Output is taken to be at z="<<zcen<<std::endl;
   std::cout<<"# Will cut output to "<<zmin<<"<z<"<<zmax<<std::endl;
   std::cout.flush();
 
