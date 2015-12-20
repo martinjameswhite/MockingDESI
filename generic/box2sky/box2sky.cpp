@@ -204,7 +204,10 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
     // Now change cpos, based on cvel, to account for the
     // difference in redshift between zcen and now.
     // Assume this is small enough one iteration is enough.
-    double dlna=log( (1+zcen)/(1+O.zr) );
+    double ztry=O.zr;
+    if (ztry<zmin) ztry=zmin;
+    if (ztry>zmax) ztry=zmin;
+    double dlna=log( (1+zcen)/(1+ztry) );
     rr = 1e-10;
     for (int idim=0; idim<3; ++idim) {
       cpos[idim] = periodic(cpos[idim]+cvel[idim]*dlna);
