@@ -206,7 +206,7 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
     // Assume this is small enough one iteration is enough.
     double ztry=O.zr;
     if (ztry<zmin) ztry=zmin;
-    if (ztry>zmax) ztry=zmin;
+    if (ztry>zmax) ztry=zmax;
     double dlna=log( (1+zcen)/(1+ztry) );
     rr = 1e-10;
     for (int idim=0; idim<3; ++idim) {
