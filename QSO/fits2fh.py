@@ -3,7 +3,6 @@
 # Read a FITS file containing the 3D positions and velocities of our QSOs,
 # and their absolute magnitudes, and convert it to a FileHandler "file"
 # that can be processed easily.
-# This also converts the tag name from "Miz2" to "absmag".
 #
 # Uses Erin Sheldon's FITSIO package:
 #	https://github.com/esheldon/fitsio
@@ -34,9 +33,9 @@ def convert(finp,fout):
     fits = F.read(finp,columns=['POS','VEL','MIZ2'],ext=1)
     # Put them in a dictionary and write them to a FileHandler file.
     data = {}
-    data['pos']    = fits['POS'][:,:]
-    data['vel']    = fits['VEL'][:,:]
-    data['absmag'] = fits['MIZ2'][:]
+    data['pos']  = fits['POS'][:,:]
+    data['vel']  = fits['VEL'][:,:]
+    data['Miz2'] = fits['MIZ2'][:]
     FH.write_file(fout,data)
     #
 
