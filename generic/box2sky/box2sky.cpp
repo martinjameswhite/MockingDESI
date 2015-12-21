@@ -227,12 +227,12 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
     for (int idim=0; idim<3; ++idim)
       rr += cpos[idim]*cpos[idim];
     rr   = sqrt(rr);
-    O.zz = zchi(rr*boxside,-1.0);		// Obs redshift.
+    O.zz = zchi(rr*boxside,-1.0);			// Obs redshift.
     if (O.zz>zmin && O.zz<zmax) {
-      O.ra = 180/M_PI*atan2(cpos[1],cpos[0]);	// RA  in degrees.
-      if (O.ra<0) O.ra+=360.0;			// Periodically wrap.
-      O.dec = 90-180/M_PI*acos(cpos[2]/rr);	// DEC in degrees.
-      O.dmod= 25+5*log10(rr*boxside/hubble);	// Distance modulus.
+      O.ra = 180/M_PI*atan2(cpos[1],cpos[0]);		// RA  in degrees.
+      if (O.ra<0) O.ra+=360.0;				// Periodically wrap.
+      O.dec  = 90-180/M_PI*acos(cpos[2]/rr);		// DEC in degrees.
+      O.dmod = 25+5*log10((1+O.zr)*rr*boxside/hubble);	// Distance modulus.
       // This next step can be slow if the mask isn't pixelized.
       O.wt  = M.getweight((90.-O.dec)*M_PI/180.,O.ra*M_PI/180.);
     }
