@@ -30,13 +30,12 @@ def calc_selection(octant):
     magg = data['GMAG']
     insurv=np.zeros(magg.size,dtype='i4')
     # An approximation to the survey selection function.
-    rr     = np.random.uniform(size=magg.size)
-    bright = np.nonzero( (magg< 22.0)             )[0]
-    medium = np.nonzero( (magg>=22.0)&(magg<22.5) )[0]
-    faint  = np.nonzero( (magg>=22.5)&(magg<23.0) )[0]
-    insurv[bright[np.nonzero( rr[bright]<0.83 )[0]]]=1
-    insurv[medium[np.nonzero( rr[medium]<0.72 )[0]]]=1
-    insurv[faint [np.nonzero( rr[faint ]<0.37 )[0]]]=1
+    # Check this logic!
+    rr = np.random.uniform(size=magg.size)
+    ww = np.nonzero( ((magg< 22.0)&(rr<0.83))|
+                     ((magg>=22.0)&(magg<22.5)&(rr<0.72))|
+                     ((magg>=22.5)&(magg<23.0)&(rr<0.37)) )[0]
+    insurv[ww] = 1
     #
     data = {}
     data['IN_SURVEY'] = insurv
