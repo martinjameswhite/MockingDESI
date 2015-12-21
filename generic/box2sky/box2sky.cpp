@@ -67,13 +67,14 @@ void	myexception(std::exception& e) {
 }
 
 
-double	periodic(const double x) {
+//Currently not used.
+//double	periodic(const double x) {
 // Wraps x periodically in the range [0,1).
-  double tmp = x;
-  if (tmp >= 1.0) tmp = x-floor(x);
-  if (tmp <  0.0) tmp = 1.0-(-x-floor(-x));
-  return(tmp);
-}
+//  double tmp = x;
+//  if (tmp >= 1.0) tmp = x-floor(x);
+//  if (tmp <  0.0) tmp = 1.0-(-x-floor(-x));
+//  return(tmp);
+//}
 
 
 
@@ -210,7 +211,7 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
     double dlna=log( (1+zcen)/(1+ztry) );
     rr = 1e-10;
     for (int idim=0; idim<3; ++idim) {
-      cpos[idim] = periodic(cpos[idim]+cvel[idim]*dlna);
+      cpos[idim] = cpos[idim]+cvel[idim]*dlna;
       rr += cpos[idim]*cpos[idim];
     }
     rr   = sqrt(rr);
@@ -337,7 +338,8 @@ int	main(int argc, char **argv)
   // Now we can subsample these galaxies by the above ratio and apply the mask.
   // The mask checking step can be slow, especially if the mask is not
   // pixelized, but by doing it this way we keep data size manageable.
-  for (int ic=0; ic<8; ++ic) {	// For each octant...
+  //for (int ic=0; ic<8; ++ic) {	// For each octant...
+  for (int ic=0; ic<1; ++ic) {	// Just one for testing.
     std::vector<struct ObsObj> Objs;
     try {Objs.reserve(Nres);} catch(std::exception& e) {myexception(e);}
     // Accumulate objects from all of the replications.
