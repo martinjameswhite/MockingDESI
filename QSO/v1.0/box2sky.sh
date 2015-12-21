@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH -J Box2Sky
-#SBATCH -t 0:20:00
+#SBATCH -t 0:10:00
 #SBATCH -n 4
 #SBATCH -o Box2Sky.out
 #SBATCH -e Box2Sky.err
@@ -16,9 +16,9 @@ OmM=0.265
 hub=0.710
 Box=3000.	# Mpc/h
 # The file to process.
-zcen=2.00
-zmin=1.75
-zmax=2.25
+zcen=2.000
+zmin=1.875
+zmax=2.125
 fb=qso_z2.00
 # Cori
 srun -n 1 -c 4 ../../generic/box2sky/box2sky \
