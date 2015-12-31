@@ -44,8 +44,9 @@ def calc_magnitude(box,octant):
         print("Using power-law K-correction")
         alpha = -0.5
         kcorr = -2.5*(1+alpha)*np.log10( (1+zz)/(1+2.0) )
+    gmi  = np.poly1d([0.1587,-1.063,2.374,-2.048,0.771])	# See notes.
     magi = miz2 + dmod + kcorr	# e.g. Ross++13, Eq. 5
-    magg = magi + 0.255		# e.g. Ross++13, Eq. B7.
+    magg = magi + gmi(zz)
     # and write the results
     data = {}
     data['GMAG'] = magg.astype('f4')

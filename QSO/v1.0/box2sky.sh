@@ -15,6 +15,10 @@ mask=../../data/tiles.pix.ply
 OmM=0.265
 hub=0.710
 Box=3000.	# Mpc/h
+# A fiducial cosmology
+OmM=0.30
+hub=0.68
+Box=2873.	# Mpc/h converted to have same Mpc value as above
 # The file to process.
 zcen=2.000
 zmin=1.875
