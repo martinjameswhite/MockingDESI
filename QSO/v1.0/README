@@ -1,1 +1,28 @@
 Codes associated with QSO mocks.
+
+This set of codes takes pre-computed boxes of QSOs,
+projects them onto the sky, generates observed magnitudes
+and then applies an approximation to the DESI selection
+function to them.
+
+A driver code, which is set up to submit jobs on NERSCs Cori
+system, is provided as "driver.py".
+
+The data are converted from FITS to FileHandler format for
+intermediate steps in the processing, and then the final
+results are repackaged into FITS files at the end.
+
+The boxes of QSOs for the v1.0 mocks are described in "qso_mock_v1.0.pdf"
+and some notes on the projection, K-corrections, counts etc. are provided
+in "qso_select.pdf".
+
+The projection from boxes onto the sky, including possible periodic
+replication of remapping of the box, is handled by the "box2sky" code
+in "generic".
+
+add_magnitude.py uses the distance modulus computed by box2sky, and a
+tabulated K-correction in "data" along with a polynomial fit to the g-i
+color to generate "observed" g-band magnitudes.
+
+select_qso.py applies an approximation to the DESI selection function.
+
