@@ -7,6 +7,9 @@
 # observed magnitudes and applied a mock DESI selection to the
 # resulting objects.
 #
+# This code should be run interactively from the mock directory
+# as "./driver.py".
+#
 #
 from __future__ import print_function,division
 
