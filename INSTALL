@@ -12,6 +12,12 @@ Numpy  (1.9.2 or later)
 Matplotlib (1.4.3 or later)
 Modern C++ compiler, such as g++ v4.3.4 or later
 
+Several of the packages make use of Erin Sheldon's FITSIO:
+	https://github.com/esheldon/fitsio
+to read and write FITS files.  We have found this to be a
+better solution than astropy's routines.
+
 You should set up an environment variable pointing to this
 directory, e.g.
 export MOCKINGDESI_BASE=`pwd`
+An example setup script is provided in 'setup.sh'.
