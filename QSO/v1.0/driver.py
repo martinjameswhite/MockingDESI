@@ -43,13 +43,13 @@ def submit_jobs():
     """    
     Does the work of writing the scripts and submitting the jobs.
     """
-    dz,zpad = 0.25,0.
+    dz,zpad = 0.25,0.125
     # Submit a different job for each redshift slice.
     for zcen in np.arange(0.50,3.76,dz):
         # The range of redshifts of QSOs to keep.  If zpad>0 the different
         # z-shells will overlap, and you can smooth sudden jumps by
-        # subsampling with a simple z-dependent factor (this would be
-        # done by the aggregator, not here).
+        # subsampling with a simple z-dependent factor (this is done by the
+        # aggregator, not here).
         zmin = zcen - dz/2. - zpad
         zmax = zcen + dz/2. + zpad
         #
@@ -59,7 +59,7 @@ def submit_jobs():
         ff = open("driver_script.sh","w")
         ff.write("""#!/bin/bash -l
 #SBATCH -J Box2Sky
-#SBATCH -t 0:10:00
+#SBATCH -t 0:05:00
 #SBATCH -n 4
 #SBATCH -o Box2Sky.out
 #SBATCH -e Box2Sky.err
@@ -81,6 +81,7 @@ export OMP_NUM_THREADS=4
             ff.write("./add_magnitude.py %s %s_oct%d\n#\n"%(fb,fb,ioct))
             ff.write("./select_qso.py %s_oct%d\n#\n"%(fb,ioct))
         ff.close()
+        print("Submitting script for %f<z<%f."%(zmin,zmax))
         subprocess.check_call([sbatch,"driver_script.sh"])
     subprocess.check_call(["/bin/rm","-f","driver_script.sh"])
     #
