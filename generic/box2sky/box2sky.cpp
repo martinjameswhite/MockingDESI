@@ -159,6 +159,7 @@ double	OmM,OmX,OmK,hh,w0,wa;
 
 std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
                                             const std::vector<float>& vel,
+                                            const std::vector<float>& flw,
                                             const Spline<double>& zchi,
                                             const double boxside,
                                             const double hubble,
@@ -172,7 +173,9 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
   // for an array of 3D positions, assuming an offset from the origin given
   // by offset[] and an observation "corner" of the box given by 0<=ic<8,
   // Returns an array of ObsObj structs.
-  // Positions are interpolated, linearly, assuming constant velocity.
+  // Positions are interpolated, linearly, assuming constant "flow".  If
+  // flow is zeroed, then no interpolation is done.  Flow equals velocity
+  // for centrals, but should be the central halo velocity for satellites.
   // The returned values are cut on zmin<zobs<zmax.
   // This could be made a method of a template class if helpful.
   if (pos.size()%3!=0 || pos.size()!=vel.size()) {
@@ -185,7 +188,7 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
   try {Objs.resize(nobj);} catch(std::exception& e) {myexception(e);}
 #pragma omp parallel for shared(Objs)
   for (int nn=0; nn<nobj; ++nn) {
-    double rr=1e-10,nhat[3],cpos[3],cvel[3];
+    double rr=1e-10,nhat[3],cpos[3],cvel[3],cflw[3];
     struct ObsObj O;
     O.indx = nn;
     // Assume loop-unrolling is enabled.
@@ -193,16 +196,18 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
       if ( (ic&(1<<idim))>0 ) {		// for viewing from a corner.
         cpos[idim] = 1.0 - pos[3*nn+idim] + offset[idim];
         cvel[idim] = 0.0 - vel[3*nn+idim];
+        cflw[idim] = 0.0 - flw[3*nn+idim];
       }
       else {
         cpos[idim] = pos[3*nn+idim] + offset[idim];
         cvel[idim] = vel[3*nn+idim];
+        cflw[idim] = flw[3*nn+idim];
       }
     for (int idim=0; idim<3; ++idim)
       rr += cpos[idim]*cpos[idim];
     rr   = sqrt(rr);
     O.zr = zchi(rr*boxside,-1.0);		// Real-space "redshift".
-    // Now change cpos, based on cvel, to account for the
+    // Now change cpos, based on cflw, to account for the
     // difference in redshift between zcen and now.
     // Assume this is small enough one iteration is enough.
     double ztry=O.zr;
@@ -211,7 +216,7 @@ std::vector<struct ObsObj>	convert2obs(const std::vector<float>& pos,
     double dlna=log( (1+zcen)/(1+ztry) );
     rr = 1e-10;
     for (int idim=0; idim<3; ++idim) {
-      cpos[idim] = cpos[idim]+cvel[idim]*dlna;
+      cpos[idim] = cpos[idim]+cflw[idim]*dlna;
       rr += cpos[idim]*cpos[idim];
     }
     rr   = sqrt(rr);
@@ -313,7 +318,10 @@ int	main(int argc, char **argv)
            <<" polygons from "<<argv[7]<<std::endl;
   std::cout.flush();
 
-  // Read the phase space data for the objects.
+  // Read the phase space data for the objects.  In addition to the
+  // velocity field read a "flow" field which describes how to extrapolate
+  // along the light-cone.  For centrals flow and velocity would be the
+  // halo velocity, but for satellites the dispersion would make them differ.
   std::vector<long> ndims;
   std::vector<float> pos=FileHandler::read_float(argv[8],"pos",ndims);
   if (ndims.size()!=2 || ndims[1]!=3) {
@@ -331,7 +339,15 @@ int	main(int argc, char **argv)
     for (int i=0; i<ndims.size(); ++i)
       std::cout<<"  ndims["<<i<<"]="<<ndims[i]<<std::endl;
   }
-  std::cout<<"# Read pos/vel information for "<<ndims[0]
+  std::vector<float> flw=FileHandler::read_float(argv[8],"flw",ndims);
+  if (ndims.size()!=2 || ndims[1]!=3) {
+    std::cout<<"Expecting to read (Nobj,3) array from "<<argv[8]<<"[flw]"
+             <<std::endl;
+    std::cout<<"Instead got dimensions: "<<std::endl;
+    for (int i=0; i<ndims.size(); ++i)
+      std::cout<<"  ndims["<<i<<"]="<<ndims[i]<<std::endl;
+  }
+  std::cout<<"# Read pos/vel/flw information for "<<ndims[0]
            <<" objects from "<<argv[8]<<std::endl;
   std::cout.flush();
 
@@ -352,7 +368,8 @@ int	main(int argc, char **argv)
           offset[2] = (double)iz;
           try {
             std::vector<struct ObsObj> O;
-            O = convert2obs(pos,vel,zchi,box,hub,offset,ic,zcen,zmin,zmax,M);
+            O = convert2obs(pos,vel,flw,
+                            zchi,box,hub,offset,ic,zcen,zmin,zmax,M);
             for (int i=0; i<O.size(); ++i)
               if (O[i].wt>0) {Objs.push_back(O[i]);}
           } catch(std::exception& e) {myexception(e);}

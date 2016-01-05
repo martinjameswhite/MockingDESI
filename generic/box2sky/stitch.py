@@ -26,6 +26,8 @@ def stitch():
     Does the work.
     """
     print("This is currently a stub.")
+    print("-- this functionality is being moved to the")
+    print("-- individual mock sections.")
     #
 
 
@@ -35,5 +37,5 @@ if __name__=="__main__":
         raise RuntimeError,\
           "Usage: %s"%sys.argv[0]
     else:
-      stitch()
+        stitch()
     #
