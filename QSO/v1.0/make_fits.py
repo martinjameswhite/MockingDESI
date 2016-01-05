@@ -28,7 +28,11 @@ def make_fits(ioct=0):
     """   
     Does the work of making the FITS file by catenating the
     redshift slices for each octant.
-    In future this could have more complex functionality.
+    Since the QLF is changing fairly rapidly with z and we have
+    relatively coarse binning in z at present, the catenated file
+    has jumps across bin boundaries that are not ideal.
+    In future this code could have more complex functionality which
+    helped resolve this issue.
     """
     zlist = np.arange(0.50,3.76,0.25)
     dat   = FH.read_file("v1.0_qso_z%4.2f_oct%d"%(zlist[0],ioct))
