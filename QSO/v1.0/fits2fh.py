@@ -35,6 +35,7 @@ def convert(finp,fout):
     data = {}
     data['pos']  = fits['POS'][:,:]
     data['vel']  = fits['VEL'][:,:]
+    data['flw']  = fits['VEL'][:,:]	# Assume all are centrals.
     data['Miz2'] = fits['MIZ2'][:]
     FH.write_file(fout,data)
     #
