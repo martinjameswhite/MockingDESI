@@ -43,8 +43,16 @@ def submit_jobs():
     """    
     Does the work of writing the scripts and submitting the jobs.
     """
+    dz,zpad = 0.25,0.
     # Submit a different job for each redshift slice.
-    for zcen in np.arange(0.50,3.76,0.25):
+    for zcen in np.arange(0.50,3.76,dz):
+        # The range of redshifts of QSOs to keep.  If zpad>0 the different
+        # z-shells will overlap, and you can smooth sudden jumps by
+        # subsampling with a simple z-dependent factor (this would be
+        # done by the aggregator, not here).
+        zmin = zcen - dz/2. - zpad
+        zmax = zcen + dz/2. + zpad
+        #
         fb = "v1.0_qso_z%4.2f"%zcen
         F2FH.convert(mockbase+fb+".fits",fb)
         #
@@ -67,7 +75,7 @@ export OMP_NUM_THREADS=4
         ff.write("# Cori\n")
         ff.write("srun -n 1 -c 4 ../../generic/box2sky/box2sky \\\n")
         ff.write("  %f %f %f "%(OmM,hub,Lbox))
-        ff.write(" %f %f %f ${mask} ${fb}\n"%(zcen,zcen-0.25/2,zcen+0.25/2))
+        ff.write(" %f %f %f ${mask} ${fb}\n"%(zcen,zmin,zmax))
         ff.write("#\n")
         for ioct in range(1):	# For each octant, do ...
             ff.write("./add_magnitude.py %s %s_oct%d\n#\n"%(fb,fb,ioct))
