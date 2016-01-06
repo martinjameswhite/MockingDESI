@@ -1,0 +1,7 @@
+Tests and validation code go here.
+
+This directory is called validation, rather than the "Tests"
+directories that live within a particular catalog version,
+to try to differentiate the two.  It is for tests or checks
+which are not specific to a particular mock but rather hold
+for all QSO mocks.
