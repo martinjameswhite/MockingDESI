@@ -1,0 +1,7 @@
+Tests and validation code go here.
+
+There are probably two kinds of tests, those specific to
+a particular version of the mocks and those which apply
+more generally.  Very general tests could apply across all
+target classes, less general tests could apply only to QSO
+mocks.
