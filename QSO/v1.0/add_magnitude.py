@@ -46,13 +46,14 @@ def calc_magnitude(box,octant):
         alpha = -0.5
         kcorr = -2.5*(1+alpha)*np.log10( (1+zz)/(1+2.0) )
     gmi  = np.poly1d([0.1502,-0.9886,2.147,-1.758,0.6397])	# See notes.
-    rmi  = np.poly1d([-0.1482,1.636,-6.716,12.55,-10.39,3.017)
+    rmi  = np.poly1d([-0.1482,1.636,-6.716,12.55,-10.39,3.017])
     magi = miz2 + dmod + kcorr	# e.g. Ross++13, Eq. 5
     magg = magi + gmi(zz.clip(0.5,3.5))
     magr = magi + rmi(zz.clip(0.5,3.5))
     # and write the results
     data = {}
     data['GMAG'] = magg.astype('f4')
+    data['RMAG'] = magr.astype('f4')
     FH.write_file(octant,data)
     #
 
