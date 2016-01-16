@@ -354,8 +354,8 @@ int	main(int argc, char **argv)
   // Now we can subsample these galaxies by the above ratio and apply the mask.
   // The mask checking step can be slow, especially if the mask is not
   // pixelized, but by doing it this way we keep data size manageable.
-  //for (int ic=0; ic<8; ++ic) {	// For each octant...
-  for (int ic=0; ic<1; ++ic) {	// Just one for testing.
+  for (int ic=0; ic<8; ++ic) {	// For each octant...
+  //for (int ic=0; ic<1; ++ic) {	// Just one for testing.
     std::vector<struct ObsObj> Objs;
     try {Objs.reserve(Nres);} catch(std::exception& e) {myexception(e);}
     // Accumulate objects from all of the replications.
