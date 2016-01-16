@@ -59,7 +59,7 @@ def submit_jobs():
         ff = open("driver_script.sh","w")
         ff.write("""#!/bin/bash -l
 #SBATCH -J Box2Sky
-#SBATCH -t 0:05:00
+#SBATCH -t 0:25:00
 #SBATCH -n 4
 #SBATCH -o Box2Sky.out
 #SBATCH -e Box2Sky.err
@@ -77,7 +77,7 @@ export OMP_NUM_THREADS=4
         ff.write("  %f %f %f "%(OmM,hub,Lbox))
         ff.write(" %f %f %f ${mask} ${fb}\n"%(zcen,zmin,zmax))
         ff.write("#\n")
-        for ioct in range(1):	# For each octant, do ...
+        for ioct in range(8):	# For each octant, do ...
             ff.write("./add_magnitude.py %s %s_oct%d\n#\n"%(fb,fb,ioct))
             ff.write("./select_qso.py %s_oct%d\n#\n"%(fb,ioct))
         ff.close()

@@ -71,6 +71,6 @@ def make_fits(ioct=0):
 
 
 if __name__=="__main__":
-    for ioct in range(1):
+    for ioct in range(8):
         make_fits(ioct)
     #
